@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d18">
+<title>Pub Pixel Million - Own Your Pixel</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#fff;font-family:Arial,sans-serif}
+header{padding:22px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #202c40}
+.logo{font-size:23px;font-weight:bold;color:#e9bd68}
+.logo span{color:white}
+nav a{color:#b8c2d4;text-decoration:none;margin-left:20px;font-size:14px}
+.hero{text-align:center;padding:65px 15px 35px}
+.hero h1{font-size:clamp(35px,7vw,65px);margin:0 0 15px}
+.hero h1 span{color:#e9bd68}
+.hero p{color:#aab6ca;line-height:1.7}
+.price{font-size:23px;color:#e9bd68;font-weight:bold;margin:25px}
+.button{background:#e9bd68;color:#101522;padding:14px 25px;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+section{padding:35px 5%;text-align:center}
+.stats{display:flex;justify-content:center;gap:45px;flex-wrap:wrap;margin:25px}
+.stat strong{display:block;font-size:25px;color:#e9bd68}
+.stat small{color:#9eabc0}
+.board-wrap{overflow-x:auto;background:#111b2b;border:1px solid #293951;border-radius:10px;padding:15px;max-width:1000px;margin:25px auto}
+#grid{display:grid;grid-template-columns:repeat(100,7px);grid-auto-rows:7px;gap:1px;width:max-content;margin:auto}
+.pixel{width:7px;height:7px;background:#26354b;cursor:pointer}
+.pixel:hover{background:#e9bd68}
+.pixel.selected{background:#e9bd68}
+.pixel.sold{background:#65758a;cursor:not-allowed}
+.info{color:#aab6ca;font-size:14px;line-height:1.8}
+.panel{background:#111b2b;border:1px solid #293951;padding:22px;border-radius:10px;max-width:500px;margin:25px auto}
+.panel strong{color:#e9bd68}
+footer{text-align:center;padding:35px;color:#77869d;border-top:1px solid #202c40;font-size:13px}
+@media(max-width:600px){nav a{margin-left:8px;font-size:12px}.hero{padding-top:45px}.stats{gap:25px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">PUB PIXEL <span>MILLION</span></div>
+<nav>
+<a href="#home">Home</a>
+<a href="#mural">Pixel Wall</a>
+<a href="#about">About</a>
+</nav>
+</header>
+
+<main id="home">
+<div class="hero">
+<h1>Own Your Piece of <span>Internet History.</span></h1>
+<p>A pixel. A link. A place in internet history.<br>
+Make your brand visible to the world.</p>
+<div class="price">€1 per pixel</div>
+<a href="#mural"><button class="button">GET YOUR PIXELS</button></a>
+</div>
+
+<section>
+<div class="stats">
+<div class="stat"><strong>10,000</strong><small>Total Pixels</small></div>
+<div class="stat"><strong id="available">10,000</strong><small>Available Pixels</small></div>
+<div class="stat"><strong id="sold">0</strong><small>Sold Pixels</small></div>
+</div>
+</section>
+
+<section id="mural">
+<h2>THE PIXEL WALL</h2>
+<p class="info">Select the pixels you want to own.<br>Each pixel costs €1.</p>
+<div class="board-wrap">
+<div id="grid"></div>
+</div>
+<div class="panel">
+<p>Selected pixels: <strong id="count">0</strong></p>
+<p>Total price: <strong id="total">€0.00</strong></p>
+<button class="button" onclick="clearSelection()">CLEAR SELECTION</button>
+<button class="button" onclick="checkout()">CONTINUE</button>
+<p class="info" id="message">Select pixels to get started.</p>
+</div>
+</section>
+
+<section id="about">
+<h2>ABOUT THE PROJECT</h2>
+<p class="info">Pub Pixel Million is a global advertising wall.<br>
+A unique space where businesses and individuals<br>
+can reserve their own piece of digital real estate.</p>
+</section>
+</main>
+
+<footer>
+PUB PIXEL MILLION © 2026 · A pixel can make history.
+</footer>
+
+<script>
+const grid=document.getElementById('grid');
+const selected=new Set();
+const sold=new Set();
+
+for(let i=0;i<10000;i++){
+ const pixel=document.createElement('div');
+ pixel.className='pixel';
+ pixel.dataset.id=i;
+ pixel.addEventListener('click',()=>{
+  if(sold.has(i))return;
+  if(selected.has(i)){
+   selected.delete(i);
+   pixel.classList.remove('selected');
+  }else{
+   selected.add(i);
+   pixel.classList.add('selected');
+  }
+  update();
+ });
+ grid.appendChild(pixel);
+}
+
+function update(){
+ document.getElementById('count').textContent=selected.size;
+ document.getElementById('total').textContent='€'+selected.size.toFixed(2);
+ document.getElementById('available').textContent=10000-sold.size;
+ document.getElementById('sold').textContent=sold.size;
+}
+
+function clearSelection(){
+ selected.clear();
+ document.querySelectorAll('.pixel.selected').forEach(p=>p.classList.remove('selected'));
+ update();
+}
+
+function checkout(){
+ if(selected.size===0){
+  document.getElementById('message').textContent='Please select at least one pixel.';
+  return;
+ }
+ document.getElementById('message').textContent=
+ 'You selected '+selected.size+' pixels. Total: €'+selected.size.toFixed(2)+'. Online checkout will be available soon.';
+}
+</script>
+</body>
+</html>
